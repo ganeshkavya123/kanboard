@@ -38,3 +38,21 @@
   gap: 30px;
   height: 100%;
 }
+
+.add-section-btn-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+}
+.add-section-btn-container button {
+  color: #fff;
+  background-color: rgb(29, 28, 28);
+  padding: 8px 30px;
+  border: none;
+  border-radius: 2px;
+  font-size: 14px;
+}
+
+.add-section-btn-container button:hover{
+  background-color: black;
+}

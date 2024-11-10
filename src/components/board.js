@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import './board.css'
-import { MoreHorizontal } from 'react-feather'
+import { MoreHorizontal, Plus } from 'react-feather'
 import { Card } from './card/card'
 import AddCard from './add-item/add-item'
 import CustomModal from './custom-modal/custom-modal'
+import { useDrop } from 'react-dnd';
 
-export const Board = ({board, addCard , clearAllCards}) => {
+export const Board = ({board, addCard , clearAllCards, moveCardToBoard}) => {
   console.log('addcard in borad',addCard);
   
   const [ShowModal, setShowModal] =useState(false)
@@ -17,20 +18,37 @@ export const Board = ({board, addCard , clearAllCards}) => {
     addCard(board.id, title, label, user)
     handleCloseModal()
   }
+
+    // Set up the drop target for this board
+    const [, drop] = useDrop({
+      accept: 'CARD',
+      drop: (item) => {
+        // Only move card if the source and target boards are different
+        if (item.boardId !== board.id) {
+          moveCardToBoard(item.id, item.boardId, board.id);
+        }
+      },
+    });
+  
   
   return (
-    <div className='board'>
+    <div className='board' ref={drop}>
         <div className='board-top'>
           <p className='board-title'>{board.title} <span>{board.cards.length}</span> </p>
           <MoreHorizontal/>
         </div>
         <div className='board-cards custom-scroll'>
           {board.cards.map( (card) =>
-           (<Card key={card.id} card={card}/>)
+           (<Card key={card.id} card={card} boardId={board.id}/>)
           )}
           
           {/* <AddCard /> */}
-          <button onClick={handleShowModal}>Add Card</button>
+          <button className="add-card-trans-btn" onClick={handleShowModal}>
+            <span className='icon-text'>
+              <Plus size={16}/>
+              Add Task
+            </span>
+          </button>
           <button onClick={() => clearAllCards(board.id)}>Clear All Cards</button>
 
 

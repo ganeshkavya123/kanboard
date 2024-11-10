@@ -45,3 +45,22 @@
     border-bottom: 1px solid #f8f8f8;
     cursor: pointer;
   }
+
+  .add-card-trans-btn {
+    background-color: transparent;
+    border: none;
+    color: #5b5858;
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  .add-card-trans-btn:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  .add-card-trans-btn .icon-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap:5px
+  }

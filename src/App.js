@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import CustomModal from './components/custom-modal/custom-modal';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { Popover, OverlayTrigger } from 'react-bootstrap';
 
 function App() {
 
@@ -47,7 +48,10 @@ function App() {
   const deleteBoard = (boardId) => {
     const updatedBoards = boards.filter( (board) => board.id!=boardId)
     setBoards(updatedBoards)
+    localStorage.setItem("prac-kanban", JSON.stringify(updatedBoards));
   }
+
+  
 
   const addCardHandler = (boardId, cardTitle, label, cardUser) => {
     // const index = boards.findIndex((item) => item.id === id);
@@ -137,6 +141,7 @@ function App() {
       });
     };
   
+    
 
   useEffect(() => {
     localStorage.setItem("prac-kanban", JSON.stringify(boards));
@@ -166,6 +171,7 @@ function App() {
               addCard={addCardHandler}
               clearAllCards={clearAllCards}
               moveCardToBoard={moveCardToBoard}
+              deleteBoard={deleteBoard} 
             />
           ))}
 

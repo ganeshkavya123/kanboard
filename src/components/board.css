@@ -64,3 +64,10 @@
     justify-content: center;
     gap:5px
   }
+
+  .popover-btns {
+    display: flex;
+    justify-content: flex-end;
+    gap:5px;
+   
+  }

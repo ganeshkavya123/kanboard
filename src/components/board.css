@@ -35,7 +35,7 @@
     flex: 1;
 }
 
-.board_dropdown {
+/* .board_dropdown {
     box-shadow: 1px 0px 20px rgba(0, 0, 0, 0.12);
     padding: 20px;
     width: 150px !important;
@@ -44,7 +44,7 @@
   .board_dropdown p {
     border-bottom: 1px solid #f8f8f8;
     cursor: pointer;
-  }
+  } */
 
   .add-card-trans-btn {
     background-color: transparent;

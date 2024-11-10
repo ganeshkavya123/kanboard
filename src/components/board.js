@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import './board.css'
 import { MoreHorizontal, Plus } from 'react-feather'
 import { Card } from './card/card'
-import AddCard from './add-item/add-item'
 import CustomModal from './custom-modal/custom-modal'
 import { useDrop } from 'react-dnd';
 import { Popover, OverlayTrigger } from 'react-bootstrap';
@@ -17,8 +16,8 @@ export const Board = ({board, addCard , clearAllCards, moveCardToBoard, deleteBo
 
   const togglePopover = () => setShowPopover(!showPopover);
 
-  const addCardForBoard = (title, label, user) =>{
-    addCard(board.id, title, label, user)
+  const addCardForBoard = (title, label, user, dueDate) =>{
+    addCard(board.id, title, label, user, dueDate)
     handleCloseModal()
   }
 
@@ -48,9 +47,9 @@ export const Board = ({board, addCard , clearAllCards, moveCardToBoard, deleteBo
             <button onClick={() => deleteBoard(board.id)} className="btn btn-danger btn-sm custom-pop-btn">
               Delete
             </button>
-            <button onClick={closePopOver} className="btn btn-secondary btn-sm custom-pop-btn">
+            {/* <button onClick={closePopOver} className="btn btn-secondary btn-sm custom-pop-btn">
               Cancel
-            </button>
+            </button> */}
           </div>
         </Popover.Body>
       </Popover>
@@ -80,7 +79,7 @@ export const Board = ({board, addCard , clearAllCards, moveCardToBoard, deleteBo
           {/* <button onClick={() => clearAllCards(board.id)}>Clear All Cards</button> */}
 
         </div>
-        <CustomModal show={ShowModal} handleClose={handleCloseModal} title='Card' onSubmit={(title, label, user)=>addCardForBoard(title, label, user)} />
+        <CustomModal show={ShowModal} handleClose={handleCloseModal} title='Card' onSubmit={(title, label, user,dueDate)=>addCardForBoard(title, label, user, dueDate)} />
       
     </div>
   )

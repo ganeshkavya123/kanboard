@@ -1,14 +1,11 @@
 import React, { useState } from 'react'
 import './card.css'
 import { CheckSquare, Clock, MoreHorizontal } from 'react-feather'
-import Dropdown from '../dropdown/dropdown';
 import { useDrag } from 'react-dnd';
+import { format, isToday, isTomorrow} from 'date-fns'
 
 export const Card = ({card, boardId}) => {
   
-  const [showDropdown, setShowDropdown] = useState(false);
-
-   // Set up drag functionality
    const [{ isDragging }, drag] = useDrag({
     type: 'CARD',
     item: { id: card.id, boardId },
@@ -17,11 +14,23 @@ export const Card = ({card, boardId}) => {
     }),
   });
 
+  const formateDueDate = (dueDate) => {
+    const date = new Date(dueDate);
+
+    if(isToday(date)){
+      return 'Today'
+    }else if(isTomorrow(date)){
+      return 'Tomorrow'
+    }else{
+      return format(date, 'MM/dd/yyy')
+    }
+  }
+
   return (
     <div className='card' 
     ref={drag}
     style={{
-      opacity: isDragging ? 0.5 : 1, // Optional styling to indicate dragging
+      opacity: isDragging ? 0.5 : 1, 
       cursor: 'move',
     }}>
       <div className='card-top'>
@@ -35,9 +44,9 @@ export const Card = ({card, boardId}) => {
       </div>
 
       <div className='cards-footer'>
-        {/* <p>{card.user}</p> */}
-        <p><Clock /> 20 sept</p>
-        <p><CheckSquare /> 1/4</p>
+        <p>{card.user}</p>
+        <p><Clock /> {card.dueDate? formateDueDate(card.dueDate) : 'N/A'}</p>
+        {/* <p><CheckSquare /> 1/4</p> */}
 
         
       </div>

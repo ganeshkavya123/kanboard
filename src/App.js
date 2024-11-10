@@ -5,16 +5,20 @@ import { useEffect, useState } from 'react';
 import CustomModal from './components/custom-modal/custom-modal';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { Popover, OverlayTrigger } from 'react-bootstrap';
+import { v4 as uuidv4 } from 'uuid';
 
 function App() {
 
   const [ShowModal, setShowModal] =useState(false)
-
+  const initialBoard = [
+    {id:uuidv4(), title:'To Do', cards:[] },
+    {id:uuidv4(), title:'In Progress', cards:[] },
+    {id:uuidv4(), title:'Completed', cards:[] },
+  ]
   const [boards, setBoards] = useState(() =>{
-    // JSON.parse(localStorage.getItem("prac-kanban")) || []
     const savedBoards = localStorage.getItem("prac-kanban");
-    return savedBoards ? JSON.parse(savedBoards) : [];
+    console.log(savedBoards);
+    return savedBoards && JSON.parse(savedBoards).length!==0 ? JSON.parse(savedBoards) : initialBoard;
   }
   );
 
@@ -26,22 +30,18 @@ function App() {
   const handleCloseModal = () => setShowModal(false);
 
   const addboardHandler = (name) => {
-    console.log(boards);
-    
-    // const tempBoards = [...boards];
-    // tempBoards.push({
-    //   id: Date.now() + Math.random() * 2,
-    //   title: name,
-    //   cards: [],
-    // });
-    // setBoards(tempBoards);
     const newBoard = {
-      id: Date.now() + Math.random() * 2,
+      id: uuidv4(),
       title: name,
       cards: [],
     };
-    setBoards((prevBoards) => [...prevBoards, newBoard]);
-    // setBoards([]);
+    // setBoards((prevBoards) => [...prevBoards, newBoard]);
+    setBoards((prevBoards) => {
+      const updatedBoards = [...prevBoards, newBoard];
+      localStorage.setItem('prac-kanban', JSON.stringify(updatedBoards)); // Save updated boards to localStorage
+      return updatedBoards;
+    });
+
 
   };
 
@@ -53,21 +53,7 @@ function App() {
 
   
 
-  const addCardHandler = (boardId, cardTitle, label, cardUser) => {
-    // const index = boards.findIndex((item) => item.id === id);
-    // if (index < 0) return;
-
-    // const tempBoards = [...boards];
-    // tempBoards[index].cards.push({
-    //   id: Date.now() + Math.random() * 2,
-    //   title,
-    //   labels: [],
-    //   date: "",
-    //   tasks: [],
-    // });
-    // setBoards(tempBoards);
-    console.log('------------');
-    
+  const addCardHandler = (boardId, cardTitle, label, cardUser, dueDate) => {
     setBoards((prevBoards) => {
       console.log(prevBoards);
 
@@ -84,7 +70,7 @@ function App() {
               ...board,
               cards: [
                 ...board.cards,
-                { id: Date.now() + Math.random() * 2, title: cardTitle, label: label, user: cardUser },
+                { id: Date.now() + Math.random() * 2, title: cardTitle, label: label, user: cardUser, dueDate: dueDate },
               ],
             }
           : board
@@ -102,7 +88,7 @@ function App() {
         if (board.id === boardId) {
           return {
             ...board,
-            cards: [], // Clear all cards for this board
+            cards: [], 
           };
         }
         return board;
@@ -110,19 +96,19 @@ function App() {
     });
   };
 
-    // Function to move card between boards
+    // drag and drop for cards over boards
     const moveCardToBoard = (cardId, sourceBoardId, targetBoardId) => {
       setBoards((prevBoards) => {
-        // Find source and target boards
+        
         const sourceBoard = prevBoards.find((board) => board.id === sourceBoardId);
         const targetBoard = prevBoards.find((board) => board.id === targetBoardId);
   
-        // Find the card in the source board
+        // find the card in source board
         const cardToMove = sourceBoard.cards.find((card) => card.id === cardId);
   
         if (!cardToMove) return prevBoards;
   
-        // Remove the card from the source board and add it to the target board
+        // removing the card from source board and adding to target board
         return prevBoards.map((board) => {
           if (board.id === sourceBoardId) {
             return {

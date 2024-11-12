@@ -160,6 +160,7 @@ function App() {
                 clearAllCards={clearAllCards}
                 moveCardToBoard={moveCardToBoard}
                 deleteBoard={deleteBoard}
+                addBoardHandler={addboardHandler}
               />
             ))}
           </div>

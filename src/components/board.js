@@ -12,14 +12,23 @@ export const Board = ({
   clearAllCards,
   moveCardToBoard,
   deleteBoard,
+  addBoardHandler
 }) => {
   const [ShowModal, setShowModal] = useState(false);
   const [showPopover, setShowPopover] = useState(false);
+  
+  //add section between sections
+  const [showAddSectionModal, setShowAddSectionModal] = useState(false);
 
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
 
   const togglePopover = () => setShowPopover(!showPopover);
+  //add section between
+  
+  const handleOpenAddSectionModal = () => setShowAddSectionModal(true);
+  const handleCloseAddSectionModal = () => setShowAddSectionModal(false);
+
 
   const addCardForBoard = (title, label, user, dueDate) => {
     addCard(board.id, title, label, user, dueDate);
@@ -62,15 +71,20 @@ export const Board = ({
     </Popover>
   );
 
+  
   return (
     <div className="board" ref={drop}>
       <div className="board-top">
         <p className="board-title">
           {board.title} <span>{board.cards.length}</span>{" "}
         </p>
+        <span>
+        <Plus size={20} onClick={handleOpenAddSectionModal} style={{ cursor: 'pointer' }} />
         <OverlayTrigger trigger="click" placement="bottom" overlay={popover}>
-          <MoreHorizontal />
+            <MoreHorizontal />
         </OverlayTrigger>
+        </span>
+       
       </div>
       <div className="board-cards custom-scroll">
         {board.cards.map((card) => (
@@ -93,6 +107,14 @@ export const Board = ({
         onSubmit={(title, label, user, dueDate) =>
           addCardForBoard(title, label, user, dueDate)
         }
+      />
+
+      <CustomModal
+        show={showAddSectionModal}
+        handleClose={handleCloseAddSectionModal}
+        title="Add Section"
+        onSubmit={addBoardHandler}
+        
       />
     </div>
   );

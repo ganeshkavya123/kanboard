@@ -8,6 +8,7 @@ import { Popover, OverlayTrigger } from "react-bootstrap";
 
 export const Board = ({
   board,
+  index,
   addCard,
   clearAllCards,
   moveCardToBoard,
@@ -49,6 +50,11 @@ export const Board = ({
   const closePopOver = () => {
     setShowPopover(false);
     console.log(showPopover);
+  };
+
+  const handleAddSection = (title) => {
+    addBoardHandler(title, index); 
+    handleCloseAddSectionModal();
   };
 
   const popover = (
@@ -113,7 +119,7 @@ export const Board = ({
         show={showAddSectionModal}
         handleClose={handleCloseAddSectionModal}
         title="Add Section"
-        onSubmit={addBoardHandler}
+        onSubmit={(title)=>handleAddSection(title)}
         
       />
     </div>

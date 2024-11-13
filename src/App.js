@@ -28,7 +28,7 @@ function App() {
 
   const handleCloseModal = () => setShowModal(false);
 
-  const addboardHandler = (name) => {
+  const addboardHandler = (name, index = null) => {
     const newBoard = {
       id: uuidv4(),
       title: name,
@@ -36,9 +36,18 @@ function App() {
     };
     // setBoards((prevBoards) => [...prevBoards, newBoard]);
     setBoards((prevBoards) => {
-      const updatedBoards = [...prevBoards, newBoard];
-      localStorage.setItem("prac-kanban", JSON.stringify(updatedBoards)); // Save updated boards to localStorage
-      return updatedBoards;
+      let updatedBoards;
+    if (index !== null) {
+      updatedBoards = [
+        ...prevBoards.slice(0, index + 1),
+        newBoard,
+        ...prevBoards.slice(index + 1),
+      ];
+    } else {
+      updatedBoards = [...prevBoards, newBoard];
+    }
+    localStorage.setItem("prac-kanban", JSON.stringify(updatedBoards));
+    return updatedBoards;
     });
   };
 
@@ -152,14 +161,16 @@ function App() {
           </div>
 
           <div className="boards-content">
-            {boards.map((item) => (
+            {boards.map((item, index) => (
               <Board
                 key={item.id}
                 board={item}
+                index={index}
                 addCard={addCardHandler}
                 clearAllCards={clearAllCards}
                 moveCardToBoard={moveCardToBoard}
                 deleteBoard={deleteBoard}
+                addBoardHandler={addboardHandler}
               />
             ))}
           </div>

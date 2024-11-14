@@ -52,8 +52,8 @@ export const Board = ({
     console.log(showPopover);
   };
 
-  const handleAddSection = (title) => {
-    addBoardHandler(title, index); 
+  const handleAddSection = (name) => {
+    addBoardHandler(name, index); 
     handleCloseAddSectionModal();
   };
 
@@ -119,7 +119,7 @@ export const Board = ({
         show={showAddSectionModal}
         handleClose={handleCloseAddSectionModal}
         title="Add Section"
-        onSubmit={(title)=>handleAddSection(title)}
+        onSubmit={(name)=>handleAddSection(name)}
         
       />
     </div>

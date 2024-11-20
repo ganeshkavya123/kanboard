@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./board.css";
 import { MoreHorizontal, Plus } from "react-feather";
 import { Card } from "./card/card";
 import CustomModal from "./custom-modal/custom-modal";
 import { useDrop } from "react-dnd";
 import { Popover, OverlayTrigger } from "react-bootstrap";
+import axios from "axios";
 
 export const Board = ({
   board,
@@ -13,11 +14,12 @@ export const Board = ({
   clearAllCards,
   moveCardToBoard,
   deleteBoard,
-  addBoardHandler
+  addBoardHandler,
+  setBoards,
 }) => {
   const [ShowModal, setShowModal] = useState(false);
   const [showPopover, setShowPopover] = useState(false);
-  
+
   //add section between sections
   const [showAddSectionModal, setShowAddSectionModal] = useState(false);
 
@@ -26,18 +28,42 @@ export const Board = ({
 
   const togglePopover = () => setShowPopover(!showPopover);
   //add section between
-  
+
   const handleOpenAddSectionModal = () => setShowAddSectionModal(true);
   const handleCloseAddSectionModal = () => setShowAddSectionModal(false);
-
 
   const addCardForBoard = (title, label, user, dueDate) => {
     addCard(board.id, title, label, user, dueDate);
     handleCloseModal();
   };
 
+  useEffect(() => {
+    const authToken = localStorage.getItem("authToken");
+
+    const fetchBoards = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3001/api/board/get-boards",
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
+
+        console.log("---", response.data);
+
+        // setBoards(response.data.boards);
+      } catch (error) {
+        console.error("Error fetching boards:", error);
+      }
+    };
+
+    fetchBoards();
+  }, []);
+
   //  drop target for this board
-  const [,drop] = useDrop({
+  const [, drop] = useDrop({
     accept: "CARD",
     drop: (item) => {
       // only move card if the source and target boards are different
@@ -52,8 +78,8 @@ export const Board = ({
     console.log(showPopover);
   };
 
-  const handleAddSection = (title) => {
-    addBoardHandler(title, index); 
+  const handleAddSection = (name) => {
+    addBoardHandler(name, index);
     handleCloseAddSectionModal();
   };
 
@@ -77,7 +103,37 @@ export const Board = ({
     </Popover>
   );
 
-  
+  const deleteCard = async (cardId, boardId) => {
+    const authToken = localStorage.getItem("authToken");
+    try {
+      const response = await axios.delete(
+        `http://localhost:3001/api/card/delete/${cardId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+
+      if (response.data.status === 1) {
+        setBoards((prevBoards) =>
+          prevBoards.map((boardItem) =>
+            boardItem.id === board.id
+              ? {
+                  ...boardItem,
+                  cards: boardItem.cards.filter((card) => card.id !== cardId),
+                }
+              : boardItem
+          )
+        );
+      } else {
+        console.error("Error deleting card:", response.data.message);
+      }
+    } catch (error) {
+      console.error("Error deleting card:", error);
+    }
+  };
+
   return (
     <div className="board" ref={drop}>
       <div className="board-top">
@@ -85,16 +141,24 @@ export const Board = ({
           {board.title} <span>{board.cards.length}</span>{" "}
         </p>
         <span>
-        <Plus size={20} onClick={handleOpenAddSectionModal} style={{ cursor: 'pointer' }} />
-        <OverlayTrigger trigger="click" placement="bottom" overlay={popover}>
+          <Plus
+            size={20}
+            onClick={handleOpenAddSectionModal}
+            style={{ cursor: "pointer" }}
+          />
+          <OverlayTrigger trigger="click" placement="bottom" overlay={popover}>
             <MoreHorizontal />
-        </OverlayTrigger>
+          </OverlayTrigger>
         </span>
-       
       </div>
       <div className="board-cards custom-scroll">
         {board.cards.map((card) => (
-          <Card key={card.id} card={card} boardId={board.id} />
+          <Card
+            key={card.id}
+            card={card}
+            boardId={board.id}
+            deleteCard={deleteCard}
+          />
         ))}
 
         {/* <AddCard /> */}
@@ -119,8 +183,7 @@ export const Board = ({
         show={showAddSectionModal}
         handleClose={handleCloseAddSectionModal}
         title="Add Section"
-        onSubmit={(title)=>handleAddSection(title)}
-        
+        onSubmit={(name) => handleAddSection(name)}
       />
     </div>
   );

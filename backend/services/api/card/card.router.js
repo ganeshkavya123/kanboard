@@ -2,11 +2,14 @@ const router = require("express").Router();
 const multer = require("multer");
 const path = require('path');
 const fs = require('fs');
-const { createCard, getCardsByBoardId, updateCard, deleteCard } = require("./card.controller");
+const { createCard, getCardsByBoardId, updateCard, deleteCard, updateCardBoard, getUsers} = require("./card.controller");
 
-router.post('/cards', createCard);
-router.get('/cards/:boardId', getCardsByBoardId);
-router.put('/cards/:id', updateCard);
-router.delete('/cards/:id', deleteCard);
+router.post('/add-card', createCard);
+router.post('/update-board', updateCardBoard)
+router.get('/get-users', getUsers)
+
+// router.get('/cards/:boardId', getCardsByBoardId);
+// router.put('/cards/:id', updateCard);
+router.delete('/delete/:id', deleteCard);
 
 module.exports = router;

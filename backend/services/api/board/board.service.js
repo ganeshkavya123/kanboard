@@ -20,9 +20,16 @@ module.exports = {
         let resObj = { success: false, data: [] };
 
         try {
-            const result = await knex(TABLE_NAME.Board).where({ userId });
+            const board = await knex(TABLE_NAME.Board);
+            await Promise.all(board.map(async (itm) => {
+                console.log('Fetching cards for board:', itm.id);
+    
+                const cardsOfBoard = await knex(TABLE_NAME.Card).where({ boardId: itm.id });
+                
+                itm['cards'] = cardsOfBoard.length !== 0 ? cardsOfBoard : [];
+            }));
             resObj.success = true;
-            resObj.data = result;
+            resObj.data = board;
         } catch (error) {
             console.log(error);
         }

@@ -1,16 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import axios from "axios";
 
 const CustomModal = ({ show, handleClose, title, onSubmit }) => {
   const [inputValue, setInputValue] = useState("");
   const [label, setLabel] = useState("");
   const [cardUser, setCardUser] = useState("");
   const [dueDate, setDueDate] = useState("");
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e) => setInputValue(e.target.value);
   const handleUserChange = (e) => setCardUser(e.target.value);
@@ -30,6 +33,35 @@ const CustomModal = ({ show, handleClose, title, onSubmit }) => {
 
     handleClose();
   };
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      setLoading(true);
+
+      const authToken = localStorage.getItem("authToken");
+      console.log("Auth Token:", authToken); // Debugging
+
+      try {
+        const response = await axios.get(
+          "http://localhost:3001/api/card/get-users",
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
+
+        console.log("Users fetched:", response.data);
+        setUsers(response.data.data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   return (
     <>
@@ -71,6 +103,7 @@ const CustomModal = ({ show, handleClose, title, onSubmit }) => {
                         type="date"
                         placeholder="mm/dd/yyyy"
                         value={dueDate}
+                        min={new Date().toISOString().split("T")[0]}
                         onChange={handleDateChange}
                       />
                     </Form.Group>
@@ -78,12 +111,27 @@ const CustomModal = ({ show, handleClose, title, onSubmit }) => {
                 </Row>
                 <Form.Group className="mb-3">
                   <Form.Label>User</Form.Label>
-                  <Form.Control
+                  {/* <Form.Control
                     type="text"
                     placeholder="Enter user..."
                     value={cardUser}
                     onChange={handleUserChange}
-                  />
+                  /> */}
+                  <Form.Select
+                    value={cardUser}
+                    onChange={(e) => handleUserChange(e.target.value)}
+                    disabled={loading || users.length === 0}
+                  >
+                    <option value="">Select a user...</option>
+                    {users.map((user) => (
+                      <option key={user.id} value={user.username}>
+                        {user.username}
+                      </option>
+                    ))}
+                  </Form.Select>
+                  {users.length === 0 && !loading && (
+                    <div>No users available.</div>
+                  )}
                 </Form.Group>
               </>
             )}

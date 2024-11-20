@@ -1,5 +1,6 @@
 const knex = require('../../../config/knex');
 const { TABLE_NAME } = require('../../../common/tablenames');
+const { API_RESPONSE_MESSAGES } = require('../../../common/constants');
 
 module.exports = {
     _createCard: async (cardData) => {
@@ -41,4 +42,31 @@ module.exports = {
             return { success: false, message: 'Error deleting card' };
         }
     },
+    _updateCardBoard: async (cardId, targetBoardId) => {
+        try {
+          const rowsAffected = await knex(TABLE_NAME.Card)
+            .where({ id: cardId })
+            .update({ boardId: targetBoardId });
+      
+          if (rowsAffected > 0) {
+            return { success: true };
+          } else {
+            return { success: false, message: 'No rows updated. Invalid cardId or boardId.' };
+          }
+        } catch (error) {
+          console.error(error);
+          return { success: false, message: 'Database error while updating boardId' };
+        }
+      },
+      _getUsers: async () => {
+        try {
+          const data = await knex(TABLE_NAME.User)
+          return { success: true, data: data };
+        } catch (error) {
+          console.error(error);
+          return { success: false, message: 'Server Error' };
+        }
+      },
+      
+
 };

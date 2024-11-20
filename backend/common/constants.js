@@ -19,7 +19,8 @@ module.exports.API_RESPONSE_STATUS_CODE = {
     BAD_REQUEST: 'Bad request',
     BOARD_CREATED:'Board created',
     BOARD_CREATION_FAILED:'Board creation failed',
-    BOARD_DELETION_FAILED: 'Board deletion failed'
+    BOARD_DELETION_FAILED: 'Board deletion failed',
+
 
 
 

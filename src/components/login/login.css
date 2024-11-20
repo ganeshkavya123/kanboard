@@ -1,0 +1,56 @@
+.cus-login-container {
+    font-family: "Karla", sans-serif;
+    background-color: #070807;
+    background-image: url(../../assets/login.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.cus-login-form {
+    background: rgba(0, 0, 0, 0.7); 
+    padding: 20px 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(73, 71, 71, 0.5);
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+}
+
+.cus-login-form h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #f0f0f0;
+}
+
+.cus-login-form input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #f8f8f8;
+}
+
+.cus-login-form button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.cus-login-form button:hover {
+    background-color: #0056b3;
+}

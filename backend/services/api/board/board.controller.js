@@ -30,7 +30,11 @@ module.exports = {
     },
 
     getBoards: async (req, res) => {
-        const userId = req.user.id;
+        console.log(req.user);
+        
+        const userId = req.user.userId;
+        console.log('-----userId',userId);
+        
 
         try {
             const result = await _getBoards(userId);
@@ -38,7 +42,7 @@ module.exports = {
             return res.json({
                 status: API_RESPONSE_STATUS_CODE.SUCCESS,
                 message: API_RESPONSE_MESSAGES.SUCCESS,
-                data: result.data,
+                boards: result.data,
             });
         } catch (error) {
             console.log(error);

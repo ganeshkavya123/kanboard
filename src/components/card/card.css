@@ -1,11 +1,11 @@
 .card {
-    padding: 10px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     gap: 10px;
     background-color: #fff;
-    border-radius: 25px;
-    border-style: none;
+    border-radius: 20px !important;
+    border: none !important;
   }
   
   .card-top {
@@ -25,9 +25,11 @@
   .card-top-label label {
     border-radius: 40px;
     padding: 4px 12px;
-    background-color: rgb(175, 171, 171);
-    color: #fff;
+    background-color: rgb(218 215 215 / 27%);
+    color: rgb(175, 171, 171);
     width: fit-content;
+    font-size: 14px;
+    font-weight: 490;
   }
   
   .card-top-more {
@@ -94,6 +96,10 @@
   .align-card-more label {
     margin-right: auto; /* Push label to the left */
   }
+
+  .align-card-more svg{
+    width: 15px;
+  }
   
   .align-card-more .overlay-trigger {
     margin-left: auto; /* Push the icon to the right */
@@ -117,3 +123,13 @@
     object-fit: cover; 
   }
   
+
+  .sticky-alert {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%; 
+    z-index: 1050 !important; 
+    text-align: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }

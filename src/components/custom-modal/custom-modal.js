@@ -7,7 +7,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import axios from "axios";
 
-const CustomModal = ({ show, handleClose, title, onSubmit }) => {
+const CustomModal = ({ show, handleClose, title, onSubmit, isEditCard, isEditBoard, currentData }) => {
   const [inputValue, setInputValue] = useState("");
   const [label, setLabel] = useState("");
   const [cardUser, setCardUser] = useState("");
@@ -33,6 +33,23 @@ const CustomModal = ({ show, handleClose, title, onSubmit }) => {
 
     handleClose();
   };
+
+  // if(isEditCard){
+  //   setLabel(currentData.label) 
+  // }
+  useEffect(() => {
+    if ((isEditCard || isEditBoard) && currentData) {
+      setInputValue(currentData.title || "");
+      setLabel(currentData.label || "");
+      setCardUser(currentData.user || "");
+      setDueDate(currentData.dueDate || "");
+    } else {
+      setInputValue("");
+      setLabel("");
+      setCardUser("");
+      setDueDate("");
+    }
+  }, [isEditCard,isEditBoard, currentData]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -119,7 +136,7 @@ const CustomModal = ({ show, handleClose, title, onSubmit }) => {
                   /> */}
                   <Form.Select
                     value={cardUser}
-                    onChange={(e) => handleUserChange(e.target.value)}
+                    onChange={handleUserChange}
                     disabled={loading || users.length === 0}
                   >
                     <option value="">Select a user...</option>

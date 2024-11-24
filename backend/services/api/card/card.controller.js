@@ -40,6 +40,10 @@ module.exports = {
         const { id } = req.params;
         const updates = req.body;
 
+        console.log('---update data',updates)
+        console.log('---params',req.params)
+
+
         const result = await _updateCard(id, updates);
         if (result.success) {
             return res.json({

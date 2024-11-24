@@ -10,10 +10,10 @@ const Login = () => {
 
   const handleLogin = async() => {
    try{
-    const response = await axios.post('http://localhost:3001/api/login', {
-        email,
-        password
-      });
+    const response = await axios.post('http://localhost:3001/api/login', 
+      { email: email, password: password }, 
+      { headers: { 'Content-Type': 'application/json' } }
+    );
 
       if (response.data.status === 1) {
         const token = response.data.data.token;

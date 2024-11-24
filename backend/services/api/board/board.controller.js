@@ -1,5 +1,5 @@
 const { API_RESPONSE_MESSAGES, API_RESPONSE_STATUS_CODE } = require('../../../common/constants');
-const { _createBoard, _getBoards, _deleteBoard } = require('./board.service');
+const { _createBoard, _getBoards, _deleteBoard, _updateBoard } = require('./board.service');
 
 module.exports = {
     createBoard: async (req, res) => {
@@ -78,4 +78,25 @@ module.exports = {
             });
         }
     },
+    updateBoard: async (req, res) => {
+        const { id } = req.params;
+        const updates = req.body;
+
+        console.log('---update data',updates)
+        console.log('---params',req.params)
+
+
+        const result = await _updateBoard(id, updates);
+        if (result.success) {
+            return res.json({
+                status: API_RESPONSE_STATUS_CODE.SUCCESS,
+                message: result.message,
+            });
+        }
+        return res.status(500).json({
+            status: API_RESPONSE_STATUS_CODE.FAILED,
+            message: result.message,
+        });
+    },
+
 };

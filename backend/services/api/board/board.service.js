@@ -49,4 +49,13 @@ module.exports = {
 
         return resObj;
     },
+    _updateBoard: async (id, updates) => {
+        try {
+            await knex(TABLE_NAME.Board).where({ id }).update(updates);
+            return { success: true, message: 'Card updated successfully' };
+        } catch (error) {
+            console.error(error);
+            return { success: false, message: 'Error updating card' };
+        }
+    },
 };

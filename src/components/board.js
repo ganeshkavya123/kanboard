@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./board.css";
-import { MoreHorizontal, Plus } from "react-feather";
+import { Edit, Edit2, MoreHorizontal, Plus, Trash2 } from "react-feather";
 import { Card } from "./card/card";
 import CustomModal from "./custom-modal/custom-modal";
 import { useDrop } from "react-dnd";
-import { Popover, OverlayTrigger } from "react-bootstrap";
+import { Popover, OverlayTrigger, Button, Alert } from "react-bootstrap";
 import axios from "axios";
 
 export const Board = ({
@@ -19,6 +19,7 @@ export const Board = ({
 }) => {
   const [ShowModal, setShowModal] = useState(false);
   const [showPopover, setShowPopover] = useState(false);
+  // const [boards, setBoards] = useState([]);
 
   //add section between sections
   const [showAddSectionModal, setShowAddSectionModal] = useState(false);
@@ -37,28 +38,29 @@ export const Board = ({
     handleCloseModal();
   };
 
-  useEffect(() => {
+  const fetchBoards = async () => {
     const authToken = localStorage.getItem("authToken");
 
-    const fetchBoards = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:3001/api/board/get-boards",
-          {
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          }
-        );
+    try {
+      const response = await axios.get(
+        "http://localhost:3001/api/board/get-boards",
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
 
-        console.log("---", response.data);
+      console.log("---", response.data);
+      // board = response.data.boards;
 
-        // setBoards(response.data.boards);
-      } catch (error) {
-        console.error("Error fetching boards:", error);
-      }
-    };
+      setBoards(response.data.boards);
+    } catch (error) {
+      console.error("Error fetching boards:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchBoards();
   }, []);
 
@@ -84,20 +86,16 @@ export const Board = ({
   };
 
   const popover = (
-    <Popover id="popover-basic">
+    <Popover id="popover-basic" className="sticky-alert">
       <Popover.Body>
-        Are you sure you want to delete this board?
+        Are you sure you want to make a change ?
         <br />
         <div className="popover-btns">
-          <button
-            onClick={() => deleteBoard(board.id)}
-            className="btn btn-danger btn-sm custom-pop-btn"
-          >
-            Delete
-          </button>
-          {/* <button onClick={closePopOver} className="btn btn-secondary btn-sm custom-pop-btn">
-              Cancel
-            </button> */}
+          <Trash2 onClick={() => deleteBoard(board.id)} />
+          <Edit
+            onClick={handleOpenAddSectionModal}
+            style={{ cursor: "pointer" }}
+          ></Edit>
         </div>
       </Popover.Body>
     </Popover>
@@ -134,57 +132,127 @@ export const Board = ({
     }
   };
 
-  return (
-    <div className="board" ref={drop}>
-      <div className="board-top">
-        <p className="board-title">
-          {board.title} <span>{board.cards.length}</span>{" "}
-        </p>
-        <span>
-          <Plus
-            size={20}
-            onClick={handleOpenAddSectionModal}
-            style={{ cursor: "pointer" }}
-          />
-          <OverlayTrigger trigger="click" placement="bottom" overlay={popover}>
-            <MoreHorizontal />
-          </OverlayTrigger>
-        </span>
-      </div>
-      <div className="board-cards custom-scroll">
-        {board.cards.map((card) => (
-          <Card
-            key={card.id}
-            card={card}
-            boardId={board.id}
-            deleteCard={deleteCard}
-          />
-        ))}
-
-        {/* <AddCard /> */}
-        <button className="add-card-trans-btn" onClick={handleShowModal}>
-          <span className="icon-text">
-            <Plus size={16} />
-            Add Task
-          </span>
-        </button>
-        {/* <button onClick={() => clearAllCards(board.id)}>Clear All Cards</button> */}
-      </div>
-      <CustomModal
-        show={ShowModal}
-        handleClose={handleCloseModal}
-        title="Card"
-        onSubmit={(title, label, user, dueDate) =>
-          addCardForBoard(title, label, user, dueDate)
+  const updateCard = async (boardId, cardId, updateData) => {
+    const authToken = localStorage.getItem("authToken");
+    try {
+      const response = await axios.put(
+        `http://localhost:3001/api/card/update/${cardId}`,
+        updateData,
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
         }
-      />
+      );
 
-      <CustomModal
-        show={showAddSectionModal}
-        handleClose={handleCloseAddSectionModal}
-        title="Add Section"
-        onSubmit={(name) => handleAddSection(name)}
-      />
-    </div>
+      if (response.data.status === 1) {
+        console.log("res after update", response.data);
+
+        fetchBoards();
+      } else {
+        console.error("Error updating card:", response.data.message);
+      }
+    } catch (error) {
+      console.error("Error updating card:", error);
+    }
+  };
+
+  const handleEditBoard = async (updatedData,boardId) => {
+    // updateBoard(title);
+    const authToken = localStorage.getItem("authToken");
+    try {
+      const response = await axios.put(
+        `http://localhost:3001/api/board/update/${boardId}`,
+        {title:updatedData},
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+
+      if (response.data.status === 1) {
+        // console.log("res after update", response.data);
+        handleCloseModal();
+        fetchBoards();
+      } else {
+        console.error("Error updating card:", response.data.message);
+      }
+    } catch (error) {
+      console.log(error)
+
+  }
+}
+
+  return (
+    <>
+      <div className="board" ref={drop}>
+        <div className="board-top">
+          <p className="board-title">
+            {board.title} <span>{board.cards.length}</span>{" "}
+          </p>
+          <span className="icon-container">
+            <Plus
+              size={20}
+              onClick={handleOpenAddSectionModal}
+              style={{ cursor: "pointer" }}
+              className="small-icon"
+            />
+            <OverlayTrigger
+              trigger="click"
+              placement="bottom"
+              overlay={popover}
+            >
+              <MoreHorizontal className="small-icon" />
+            </OverlayTrigger>
+          </span>
+        </div>
+
+        <div className="board-cards custom-scroll">
+          {board.cards.map((card) => (
+            <Card
+              key={card.id}
+              card={card}
+              boardId={board.id}
+              deleteCard={deleteCard}
+              updateCard={updateCard}
+            />
+          ))}
+
+          {/* <AddCard /> */}
+          <button className="add-card-trans-btn" onClick={handleShowModal}>
+            <span className="icon-text">
+              <Plus size={16} />
+              Add Task
+            </span>
+          </button>
+          {/* <button onClick={() => clearAllCards(board.id)}>Clear All Cards</button> */}
+        </div>
+        <CustomModal
+          show={ShowModal}
+          handleClose={handleCloseModal}
+          title="Card"
+          onSubmit={(title, label, user, dueDate) =>
+            addCardForBoard(title, label, user, dueDate)
+          }
+        />
+
+        <CustomModal
+          show={showAddSectionModal}
+          handleClose={handleCloseAddSectionModal}
+          title="Add Section"
+          onSubmit={(name) => handleAddSection(name)}
+        />
+
+        <CustomModal
+          show={showAddSectionModal}
+          handleClose={handleCloseAddSectionModal}
+          title="Update Section"
+          isEditBoard = {true}
+          currentData={board}
+          onSubmit={(updatedData) => handleEditBoard(updatedData, board.id)}
+        />
+      </div>
+    </>
   );
 };

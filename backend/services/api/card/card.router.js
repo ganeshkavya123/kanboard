@@ -9,7 +9,7 @@ router.post('/update-board', updateCardBoard)
 router.get('/get-users', getUsers)
 
 // router.get('/cards/:boardId', getCardsByBoardId);
-// router.put('/cards/:id', updateCard);
+router.put('/update/:id', updateCard);
 router.delete('/delete/:id', deleteCard);
 
 module.exports = router;

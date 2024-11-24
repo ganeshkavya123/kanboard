@@ -12,19 +12,29 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
+    align-items: flex-start;
     width: 100%;
+    /* width: 300px; 
+    flex-direction: column; 
+    box-sizing: border-box; 
+    padding: 0.5rem;  */
   }
-  
-  .card-top-label {
+
+  .card-l-s{
     display: flex;
-    align-items: center; 
+    align-items: flex-end;
+    justify-content: space-between;
+    width: 100%;
+    margin-left: 63px;
+  }
+  .card-f-label {
     width: 100%;
     justify-content: space-between;
   }
   
-  .card-top-label label {
+  .card-f-label label {
     border-radius: 40px;
-    padding: 4px 12px;
+    padding: 2px 12px;
     background-color: rgb(218 215 215 / 27%);
     color: rgb(175, 171, 171);
     width: fit-content;
@@ -51,6 +61,12 @@
     font-weight: bold;
     font-size: 1rem;
     line-height: 1.875rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal; 
+    overflow: hidden; 
+    /* flex: 1; */
+    margin-right: 0.5rem;
   }
   
   .cards-footer {
@@ -58,19 +74,6 @@
     justify-content: space-between;
     align-items: center;
   }
-  
-  /* .card-footer-item {
-    border-radius: 40px;
-    padding: 4px 12px;
-    background-color: #f8f8f8;
-    color: #000;
-    width: fit-content;
-    font-size: 10px;
-    line-height: 21px;
-    display: flex;
-    gap: 5px;
-    align-items: center;
-  } */
   
   .cards-footer svg {
     height: 13px;
@@ -94,7 +97,8 @@
   }
   
   .align-card-more label {
-    margin-right: auto; /* Push label to the left */
+    margin-right: auto;
+    /* padding-top: 0.5rem; */
   }
 
   .align-card-more svg{
@@ -102,8 +106,14 @@
   }
   
   .align-card-more .overlay-trigger {
-    margin-left: auto; /* Push the icon to the right */
+    margin-left: auto; 
     cursor: pointer;
+  }
+
+  .more-icon {
+    flex-shrink: 0; 
+    display: flex;
+    align-items: flex-start;
   }
 
   .more-icon:hover {

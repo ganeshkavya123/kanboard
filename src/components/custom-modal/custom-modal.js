@@ -7,7 +7,15 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import axios from "axios";
 
-const CustomModal = ({ show, handleClose, title, onSubmit, isEditCard, isEditBoard, currentData }) => {
+const CustomModal = ({
+  show,
+  handleClose,
+  title,
+  onSubmit,
+  isEditCard,
+  isEditBoard,
+  currentData,
+}) => {
   const [inputValue, setInputValue] = useState("");
   const [label, setLabel] = useState("");
   const [cardUser, setCardUser] = useState("");
@@ -35,7 +43,7 @@ const CustomModal = ({ show, handleClose, title, onSubmit, isEditCard, isEditBoa
   };
 
   // if(isEditCard){
-  //   setLabel(currentData.label) 
+  //   setLabel(currentData.label)
   // }
   useEffect(() => {
     if ((isEditCard || isEditBoard) && currentData) {
@@ -49,7 +57,7 @@ const CustomModal = ({ show, handleClose, title, onSubmit, isEditCard, isEditBoa
       setCardUser("");
       setDueDate("");
     }
-  }, [isEditCard,isEditBoard, currentData]);
+  }, [isEditCard, isEditBoard, currentData]);
 
   useEffect(() => {
     const fetchUsers = async () => {

@@ -23,8 +23,6 @@ function Kanban() {
       : initialBoard;
   });
 
-
-
   const HandleShowModal = (type) => {
     setShowModal(true);
   };
@@ -40,32 +38,38 @@ function Kanban() {
     // setBoards((prevBoards) => [...prevBoards, newBoard]);
     setBoards((prevBoards) => {
       let updatedBoards;
-    if (index !== null) {
-      updatedBoards = [
-        ...prevBoards.slice(0, index + 1),
-        newBoard,
-        ...prevBoards.slice(index + 1),
-      ];
-    } else {
-      updatedBoards = [...prevBoards, newBoard];
-    }
-    localStorage.setItem("prac-kanban", JSON.stringify(updatedBoards));
-    return updatedBoards;
+      if (index !== null) {
+        updatedBoards = [
+          ...prevBoards.slice(0, index + 1),
+          newBoard,
+          ...prevBoards.slice(index + 1),
+        ];
+      } else {
+        updatedBoards = [...prevBoards, newBoard];
+      }
+      localStorage.setItem("prac-kanban", JSON.stringify(updatedBoards));
+      return updatedBoards;
     });
-    console.log('boards2',boards);
+    console.log("boards2", boards);
   };
 
   const deleteBoard = (boardId) => {
     const updatedBoards = boards.filter((board) => board.id != boardId);
     setBoards(updatedBoards);
-    console.log('boards3',boards);
+    console.log("boards3", boards);
     localStorage.setItem("prac-kanban", JSON.stringify(updatedBoards));
   };
 
-  const addCardHandler = async (boardId, cardTitle, label, cardUser, dueDate) => {
+  const addCardHandler = async (
+    boardId,
+    cardTitle,
+    label,
+    cardUser,
+    dueDate
+  ) => {
     const authToken = localStorage.getItem("authToken");
 
-    try{
+    try {
       const response = await axios.post(
         "http://localhost:3001/api/card/add-card",
         {
@@ -77,11 +81,11 @@ function Kanban() {
         },
         {
           headers: {
-            Authorization: `Bearer ${authToken}`, 
+            Authorization: `Bearer ${authToken}`,
           },
         }
       );
-  
+
       if (response.data && response.data.status === 1) {
         const newCard = response.data.data;
         setBoards((prevBoards) =>
@@ -94,15 +98,12 @@ function Kanban() {
               : board
           )
         );
-  
-      }else {
+      } else {
         console.error("Error adding card:", response.data.message);
       }
-    }catch(error){
+    } catch (error) {
       console.error("Error adding card:", error);
     }
-  
-
   };
   // const clearAllBoardsHandler = () => {
   //   setBoards([]); // Set the boards state to an empty array
@@ -157,19 +158,21 @@ function Kanban() {
         }
       });
     });
-    console.log('boards1',boards);
+    console.log("boards1", boards);
     try {
-      const response = await axios.post("http://localhost:3001/api/card/update-board", {
-        cardId,
-        targetBoardId,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${authToken}`, 
+      const response = await axios.post(
+        "http://localhost:3001/api/card/update-board",
+        {
+          cardId,
+          targetBoardId,
         },
-      }
-    );
-  
+        {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+
       if (response.data.status !== 1) {
         console.error("API error:", response.data.message);
       }
@@ -180,34 +183,31 @@ function Kanban() {
 
   useEffect(() => {
     localStorage.setItem("prac-kanban", JSON.stringify(boards));
-    const authToken = localStorage.getItem("authToken"); 
-    
-    const fetchBoards = async() => {
-        try{
-          const response = await axios.get('http://localhost:3001/api/board/get-boards',
-            {
-                headers:{
-                    Authorization: `Bearer ${authToken}`
-                }
-            }
-          )
-          if (Array.isArray(response.data.boards)) {
-            setBoards(response.data.boards);
-            console.log('boards1',boards);
-            
-          } else {
-            console.error("Invalid boards data", response.data);
-          }
-  
-          
-        }catch(error){
-          console.error("Error fetching boards:", error);
-        }
-      };
-    
-      fetchBoards();
-  }, []);
+    const authToken = localStorage.getItem("authToken");
 
+    const fetchBoards = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3001/api/board/get-boards",
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
+        if (Array.isArray(response.data.boards)) {
+          setBoards(response.data.boards);
+          console.log("boards1", boards);
+        } else {
+          console.error("Invalid boards data", response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching boards:", error);
+      }
+    };
+
+    fetchBoards();
+  }, []);
 
   return (
     <DndProvider backend={HTML5Backend}>

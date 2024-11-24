@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import "./card.css";
-import { CheckSquare, Clock, Edit, MoreHorizontal, Trash2 } from "react-feather";
+import {
+  CheckSquare,
+  Clock,
+  Edit,
+  MoreHorizontal,
+  Trash2,
+} from "react-feather";
 import { useDrag } from "react-dnd";
 import { format, isToday, isTomorrow, isPast } from "date-fns";
 import { OverlayTrigger, Popover } from "react-bootstrap";
@@ -51,9 +57,8 @@ export const Card = ({ card, boardId, deleteCard, updateCard }) => {
           {/* <button onClick={closePopOver} className="btn btn-secondary btn-sm custom-pop-btn">
               Cancel
             </button> */}
-            <Trash2 onClick={() => deleteCardHandler(card.id)}/>
-            <Edit onClick={handleShowModal}></Edit>
-          
+          <Trash2 onClick={() => deleteCardHandler(card.id)} />
+          <Edit onClick={handleShowModal}></Edit>
         </div>
       </Popover.Body>
     </Popover>
@@ -74,7 +79,7 @@ export const Card = ({ card, boardId, deleteCard, updateCard }) => {
   };
 
   const handleEditCard = (title, label, user, dueDate) => {
-    dueDate = dueDate.split('T')[0];
+    dueDate = dueDate.split("T")[0];
     updateCard(boardId, card.id, { title, label, user, dueDate });
     handleCloseModal();
   };
@@ -89,17 +94,13 @@ export const Card = ({ card, boardId, deleteCard, updateCard }) => {
       }}
     >
       <div className="card-top">
-        <div className="card-top-label">
-          <label>{card.label}</label>
-        </div>
+        <div className="card-title">{card.title}</div>
         <span className="align-card-more">
           <OverlayTrigger trigger="click" placement="bottom" overlay={popover}>
             <MoreHorizontal className="more-icon" />
           </OverlayTrigger>
         </span>
       </div>
-
-      <div className="card-title">{card.title}</div>
 
       <div className="cards-footer">
         <div className="user-info">
@@ -108,12 +109,13 @@ export const Card = ({ card, boardId, deleteCard, updateCard }) => {
             // alt="User"
             className="user-avatar"
           />
-          <p className="decor-user">{card.user}</p>
-        </div>
-        <div>
-          <p className="decor-date" style={getDueDateStyle(card.dueDate)}>
-            {/* <Clock />  */}
+          <p className="decor-user" style={getDueDateStyle(card.dueDate)}>
             {card.dueDate ? formateDueDate(card.dueDate) : "N/A"}
+          </p>
+        </div>
+        <div className="card-l-s">
+          <p className="card-f-label">
+            <label>{card.label}</label>
           </p>
         </div>
       </div>
@@ -123,7 +125,7 @@ export const Card = ({ card, boardId, deleteCard, updateCard }) => {
         handleClose={handleCloseModal}
         title="Card"
         isEditCard={true}
-        currentData = {card}
+        currentData={card}
         onSubmit={handleEditCard}
       />
     </div>

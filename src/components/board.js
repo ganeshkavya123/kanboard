@@ -157,13 +157,13 @@ export const Board = ({
     }
   };
 
-  const handleEditBoard = async (updatedData,boardId) => {
+  const handleEditBoard = async (updatedData, boardId) => {
     // updateBoard(title);
     const authToken = localStorage.getItem("authToken");
     try {
       const response = await axios.put(
         `http://localhost:3001/api/board/update/${boardId}`,
-        {title:updatedData},
+        { title: updatedData },
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
@@ -179,10 +179,9 @@ export const Board = ({
         console.error("Error updating card:", response.data.message);
       }
     } catch (error) {
-      console.log(error)
-
-  }
-}
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -248,7 +247,7 @@ export const Board = ({
           show={showAddSectionModal}
           handleClose={handleCloseAddSectionModal}
           title="Update Section"
-          isEditBoard = {true}
+          isEditBoard={true}
           currentData={board}
           onSubmit={(updatedData) => handleEditBoard(updatedData, board.id)}
         />
